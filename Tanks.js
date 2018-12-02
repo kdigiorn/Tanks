@@ -129,10 +129,16 @@ function addBoundries() {
 }
 
 function addWalls() {
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 10; i++) {
         walls.push(new THREE.Mesh(new THREE.BoxGeometry(250, 250, 250), new THREE.MeshLambertMaterial( {map: THREE.ImageUtils.loadTexture('textures/crate.png')} )));
-        walls[i].position.x = -1125 + (i % 10) * 250;
-        walls[i].position.z = -250 + (i % 3) * 250;
+        if (i%2 == 0){
+           walls[i].position.x = Math.floor(Math.random()*1000) + 1;
+           walls[i].position.z = Math.floor(Math.random()*1000) + 1;
+        }
+        else {
+           walls[i].position.x = -1 * (Math.floor(Math.random()*1000) + 1);
+           walls[i].position.z = -1 * (Math.floor(Math.random()*1000) + 1);
+        }
         walls[i].castShadow = true;
         walls[i].receiveShadow = true;
         walls[i].position.y = 125;
@@ -380,8 +386,15 @@ var render = function() {
 					player1Shots[i].Box3.isIntersectionBox(boundries[2].Box3) || player1Shots[i].Box3.isIntersectionBox(boundries[3].Box3) ||
 					player1Shots[i].Box3.isIntersectionBox(ground.Box3)) {
 				//check if out of bounds
-				scene.remove(player1Shots[i]);
-				player1Shots.splice(i, 1);
+				//scene.remove(player1Shots[i]);
+				//player1Shots.splice(i, 1);
+            if (player1Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player1Shots[i].Box3.isIntersectionBox(boundries[1].Box3))
+               player1Shots[i].shotdX *= -1.0;
+            else {
+               player1Shots[i].shotdZ *= -1.0;
+            }
+            player1Shots[i].shotdY *= -1.0;
+            player1Shots[i].counter++;
 				audioHitTerrain.play();
 				audioHitTerrain.currentTime = 0;
 			} else if (player1Shots[i].position.y - 5 < 0) {
@@ -389,22 +402,33 @@ var render = function() {
 				player1Shots.splice(i, 1);
 				audioHitTerrain.play();
 				audioHitTerrain.currentTime = 0;
-			} else {
+			}  else {
 				//check if hit wall
 				for (j = 0; j < walls.length; j++) {
 					if (player1Shots[i].Box3.isIntersectionBox(walls[j].Box3)) {
-						scene.remove(player1Shots[i]);
+						//scene.remove(player1Shots[i]);
+                  if (player1Shots[i].Box3.isIntersectionBox(walls[0].Box3) || player1Shots[i].Box3.isIntersectionBox(walls[1].Box3))
+                     player1Shots[i].shotdX *= -1.0;
+                  else {
+                     player1Shots[i].shotdZ *= -1.0;
+                  }
+                  player1Shots[i].shotdY *= -1.0;
+                  player1Shots[i].counter++;
 						scene.remove(walls[j]);
 						walls.splice(j, 1);
-						player1Shots.splice(i, 1);
+						//player1Shots.splice(i, 1);
 						audioHitBox.play();
 						audioHitBox.currentTime = 0;
 						break;
 					}
 				}
 			}
+         if (player1Shots[i].counter > 2){
+            scene.remove(player1Shots[i]);
+				player1Shots.splice(i, 1);
+         }
 		}
-		for (i = 0; i < player2Shots.length; i++) {
+      for (i = 0; i < player2Shots.length; i++) {
 			player2Shots[i].position.x += player2Shots[i].shotdX;
 			player2Shots[i].position.y += player2Shots[i].shotdY;
 			player2Shots[i].position.z += player2Shots[i].shotdZ;
@@ -417,24 +441,33 @@ var render = function() {
 
 			player2Shots[i].Box3.min.z = player2Shots[i].position.z - 5;
 			player2Shots[i].Box3.max.z = player2Shots[i].position.z + 5;
+			//create particle trail
 			particleGroup.triggerPoolEmitter( 1, (pos.set(player2Shots[i].position.x, player2Shots[i].position.y, player2Shots[i].position.z)) );
+
 			//check if hit player
 			if (player2Shots[i].Box3.isIntersectionBox(player1.Box3)) {
 				scene.remove(player2Shots[i]);
-				player2Shots.splice(i, 1);
+				player1Shots.splice(i, 1);
 				scene.remove(player1);
 				audioHitPlayer.play();
 				audioHitPlayer.currentTime = 0;
                 gameOver(2);
-				//alert("Player 2 wins! Refresh to replay.");
+				//alert("Player 1 wins! Refresh to replay.");
                 player1Dead = true;
-				player1.Box3 = new THREE.Box3(new THREE.Vector3(-100, -100, -100), new THREE.Vector3(-100, -100, -100));
+				player2.Box3 = new THREE.Box3(new THREE.Vector3(-100, -100, -100), new THREE.Vector3(-100, -100, -100));
 			} else if (player2Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[1].Box3) ||
 					player2Shots[i].Box3.isIntersectionBox(boundries[2].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[3].Box3) ||
 					player2Shots[i].Box3.isIntersectionBox(ground.Box3)) {
 				//check if out of bounds
-				scene.remove(player2Shots[i]);
-				player2Shots.splice(i, 1);
+				//scene.remove(player1Shots[i]);
+				//player1Shots.splice(i, 1);
+            if (player2Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[1].Box3))
+               player2Shots[i].shotdX *= -1.0;
+            else {
+               player2Shots[i].shotdZ *= -1.0;
+            }
+            player2Shots[i].shotdY *= -1.0;
+            player2Shots[i].counter++;
 				audioHitTerrain.play();
 				audioHitTerrain.currentTime = 0;
 			} else if (player2Shots[i].position.y - 5 < 0) {
@@ -442,20 +475,31 @@ var render = function() {
 				player2Shots.splice(i, 1);
 				audioHitTerrain.play();
 				audioHitTerrain.currentTime = 0;
-			} else {
+			}  else {
 				//check if hit wall
 				for (j = 0; j < walls.length; j++) {
 					if (player2Shots[i].Box3.isIntersectionBox(walls[j].Box3)) {
-						scene.remove(player2Shots[i]);
+						//scene.remove(player1Shots[i]);
+                  if (player2Shots[i].Box3.isIntersectionBox(walls[0].Box3) || player2Shots[i].Box3.isIntersectionBox(walls[1].Box3))
+                     player2Shots[i].shotdX *= -1.0;
+                  else {
+                     player2Shots[i].shotdZ *= -1.0;
+                  }
+                  player2Shots[i].shotdY *= -1.0;
+                  player2Shots[i].counter++;
 						scene.remove(walls[j]);
 						walls.splice(j, 1);
-						player2Shots.splice(i, 1);
+						//player1Shots.splice(i, 1);
 						audioHitBox.play();
 						audioHitBox.currentTime = 0;
 						break;
 					}
 				}
 			}
+         if (player2Shots[i].counter > 2){
+            scene.remove(player2Shots[i]);
+				player2Shots.splice(i, 1);
+         }
 		}
 		//player 1 movement
 		if (Key.isDown(Key.W)) {
@@ -682,18 +726,18 @@ var render = function() {
 		// 		cannon1.rotation.x = -90 * Math.PI / 180;
 		// 	}
 		// }
-		if (Key.isDown(Key.Y)) {
-			cannon2.rotation.x += 0.5 * Math.PI / 180;
-			if (cannon2.rotation.x > 0) {
-				cannon2.rotation.x = 0;
-			}
-		}
-		if (Key.isDown(Key.H)) {
-			cannon2.rotation.x -= 0.5 * Math.PI / 180;
-			if (cannon2.rotation.x < -90 * Math.PI / 180) {
-				cannon2.rotation.x = -90 * Math.PI / 180;
-			}
-		}
+		// if (Key.isDown(Key.Y)) {
+		// 	cannon2.rotation.x += 0.5 * Math.PI / 180;
+		// 	if (cannon2.rotation.x > 0) {
+		// 		cannon2.rotation.x = 0;
+		// 	}
+		// }
+		// if (Key.isDown(Key.H)) {
+		// 	cannon2.rotation.x -= 0.5 * Math.PI / 180;
+		// 	if (cannon2.rotation.x < -90 * Math.PI / 180) {
+		// 		cannon2.rotation.x = -90 * Math.PI / 180;
+		// 	}
+		// }
 
 		//Firing
 		if (p1fireRate == 60 && Key.isDown(Key.SHIFT)) {
@@ -713,6 +757,7 @@ var render = function() {
 			audioShoot.play();
 			audioShoot.currentTime = 0;
 			p1fireRate = 0;
+         player1Shots[i].counter = 0;
 		}
 		if (p2fireRate == 60 && Key.isDown(Key.FSLASH)) {
 			//create bullet
@@ -732,6 +777,7 @@ var render = function() {
 			audioShoot.play();
 			audioShoot.currentTime = 0;
 			p2fireRate = 0;
+         player2Shots[i].counter = 0
 		}
 	} else {
 		if (Key.isDown(Key.B)) {
