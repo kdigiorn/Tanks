@@ -15,6 +15,17 @@ var text1;
 var text2;
 var counter = 0;
 var k = 0;
+var wall1 = false;
+var wall2 = false;
+var dummy = 0;
+var easy = false;
+var hard = false;
+var l1 = false;
+var l2 = false;
+var random = false;
+var set = false;
+var wait = 0;
+
 
 var Key = {
    pressed: {},
@@ -33,6 +44,14 @@ var Key = {
    RIGHT: 39,
    DOWN: 40,
    SPACEBAR: 32,
+   ONE: 49,
+   TWO: 50,
+   THREE: 51,
+   FOUR: 52,
+   FIVE: 53,
+   SIX: 54,
+   SEVEN: 55,
+   EIGHT: 56,
 
    W: 87,
    A: 65,
@@ -149,8 +168,203 @@ function addBoundries() {
    scene.add(rWall);
 }
 
+function Menu() {
+   var Start0 = new THREE.TextGeometry("Please pick one of the game play modes:", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart0 = new THREE.Mesh(Start0, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart0.position.y = 900;
+   textStart0.position.z = -300;
+   textStart0.rotation.x = -1.43;
+   Start0.computeBoundingBox();
+   var centerX0 = 0.5 * (Start0.boundingBox.max.x - Start0.boundingBox.min.x);
+   textStart0.position.x = -centerX0;
+
+   var Start1 = new THREE.TextGeometry("1) Easy - Level 1 - Random Movement", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart1 = new THREE.Mesh(Start1, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart1.position.y = 900;
+   textStart1.position.z = -200;
+   textStart1.rotation.x = -1.43;
+   Start1.computeBoundingBox();
+   var centerX1 = 0.5 * (Start1.boundingBox.max.x - Start1.boundingBox.min.x);
+   textStart1.position.x = -centerX1;
+
+   var Start2 = new THREE.TextGeometry("2) Hard - Level 1 - Random Movement", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart2 = new THREE.Mesh(Start2, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart2.position.y = 900;
+   textStart2.position.z = -100;
+   textStart2.rotation.x = -1.43;
+   Start2.computeBoundingBox();
+   var centerX2 = 0.5 * (Start2.boundingBox.max.x - Start2.boundingBox.min.x);
+   textStart2.position.x = -centerX2;
+
+   var Start3 = new THREE.TextGeometry("3) Easy - Level 2 - Random Movement", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart3 = new THREE.Mesh(Start3, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart3.position.y = 900;
+   textStart3.position.z = 0;
+   textStart3.rotation.x = -1.43;
+   Start3.computeBoundingBox();
+   var centerX3 = 0.5 * (Start3.boundingBox.max.x - Start3.boundingBox.min.x);
+   textStart3.position.x = -centerX3;
+
+   var Start4 = new THREE.TextGeometry("4) Hard - Level 2 - Random Movement", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart4 = new THREE.Mesh(Start4, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart4.position.y = 900;
+   textStart4.position.z = 100;
+   textStart4.rotation.x = -1.43;
+   Start4.computeBoundingBox();
+   var centerX4 = 0.5 * (Start4.boundingBox.max.x - Start4.boundingBox.min.x);
+   textStart4.position.x = -centerX4;
+
+   var Start5 = new THREE.TextGeometry("5) Easy - Level 1 - Set Movement", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart5 = new THREE.Mesh(Start5, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart5.position.y = 900;
+   textStart5.position.z = 200;
+   textStart5.rotation.x = -1.43;
+   Start5.computeBoundingBox();
+   var centerX5 = 0.5 * (Start5.boundingBox.max.x - Start5.boundingBox.min.x);
+   textStart5.position.x = -centerX5;
+
+   var Start6 = new THREE.TextGeometry("6) Hard - Level 1 - Set Movement", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart6 = new THREE.Mesh(Start6, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart6.position.y = 900;
+   textStart6.position.z = 300;
+   textStart6.rotation.x = -1.43;
+   Start6.computeBoundingBox();
+   var centerX6 = 0.5 * (Start6.boundingBox.max.x - Start6.boundingBox.min.x);
+   textStart6.position.x = -centerX6;
+
+   var Start7 = new THREE.TextGeometry("7) Easy - Level 2 - Set Movement", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart7 = new THREE.Mesh(Start7, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart7.position.y = 900;
+   textStart7.position.z = 400;
+   textStart7.rotation.x = -1.43;
+   Start7.computeBoundingBox();
+   var centerX7 = 0.5 * (Start7.boundingBox.max.x - Start7.boundingBox.min.x);
+   textStart7.position.x = -centerX7;
+
+   var Start8 = new THREE.TextGeometry("8) Hard - Level 2 - Set Movement", {
+      size: 50,
+      height: 30,
+      font: "helvetiker"
+   });
+   textStart8 = new THREE.Mesh(Start8, new THREE.MeshLambertMaterial({
+      color: 0xffffff
+   }));
+   textStart8.position.y = 900;
+   textStart8.position.z = 500;
+   textStart8.rotation.x = -1.43;
+   Start8.computeBoundingBox();
+   var centerX8 = 0.5 * (Start8.boundingBox.max.x - Start8.boundingBox.min.x);
+   textStart8.position.x = -centerX8;
+
+   scene.add(textStart0)
+   scene.add(textStart1)
+   scene.add(textStart2)
+   scene.add(textStart3)
+   scene.add(textStart4)
+   scene.add(textStart5)
+   scene.add(textStart6)
+   scene.add(textStart7)
+   scene.add(textStart8)
+
+   while (wait < 1000000000) {
+      if (Key.isDown(Key.ONE)) {
+         easy = true;
+         l1 = true;
+         random = true;
+         break;
+      } else if (Key.isDown(Key.TWO)) {
+         hard = true;
+         l1 = true;
+         random = true;
+         break;
+      } else if (Key.isDown(Key.THREE)) {
+         easy = true;
+         l2 = true;
+         random = true;
+         break;
+      } else if (Key.isDown(Key.FOUR)) {
+         hard = true;
+         l2 = true;
+         random = true
+         break;
+      } else if (Key.isDown(Key.FIVE)) {
+         easy = true;
+         l1 = true;
+         set = true;
+         break;
+      } else if (Key.isDown(Key.SIX)) {
+         hard = true;
+         l1 = true;
+         set = true;
+         break;
+      } else if (Key.isDown(Key.SEVEN)) {
+         easy = true;
+         l2 = true;
+         set = true;
+         break;
+      } else if (Key.isDown(Key.EIGHT)) {
+         hard = true;
+         l2 = true;
+         set = true;
+         break;
+      }
+      wait++;
+   }
+}
+
+
+
 function addWalls() {
-   for (var i = 0; i < 10; i++) {
+   //for (var i = 0; i < 10; i++) { // USE THIS ONE FOR LEVEL 1
+   for (var i = 0; i < 16; i++) { // USE THIS ONE FOR LEVEL 2
       walls.push(new THREE.Mesh(new THREE.BoxGeometry(250, 250, 250), new THREE.MeshLambertMaterial({
          map: THREE.ImageUtils.loadTexture('textures/crate.png')
       })));
@@ -164,16 +378,58 @@ function addWalls() {
       //    walls[i].position.x = -1 * (Math.floor(Math.random() * 1000) + 1);
       //    walls[i].position.z = -1 * (Math.floor(Math.random() * 1000) + 1);
       // }
-      if (i % 2 == 0) {
-         walls[i].position.x = i * 100;
-         walls[i].position.z = i * 100;
-      }
 
-      else {
-         walls[i].position.x = i * -100;
-         walls[i].position.z = i * -100;
-      }
+      // LEVEL 1
+      // if (i % 2 == 0) {
+      //    walls[i].position.x = i * 100;
+      //    walls[i].position.z = i * 100;
+      // } else {
+      //    walls[i].position.x = i * -100;
+      //    walls[i].position.z = i * -100;
+      // }
 
+      // walls[i].castShadow = true;
+      // walls[i].receiveShadow = true;
+      // walls[i].position.y = 125;
+      // walls[i].Box3 = new THREE.Box3(new THREE.Vector3(walls[i].position.x - 125, 0, walls[i].position.z - 125), new THREE.Vector3(walls[i].position.x + 125, 250, walls[i].position.z + 125));
+      // scene.add(walls[i]);
+   }
+   // LEVEL 2
+   walls[0].position.x = -600;
+   walls[0].position.z = -600;
+   walls[1].position.x = -600;
+   walls[1].position.z = -400;
+   walls[2].position.x = -400;
+   walls[2].position.z = -600;
+   walls[3].position.x = -400;
+   walls[3].position.z = -400;
+   walls[4].position.x = 600;
+   walls[4].position.z = 600;
+   walls[5].position.x = 600;
+   walls[5].position.z = 400;
+   walls[6].position.x = 400;
+   walls[6].position.z = 600;
+   walls[7].position.x = 400;
+   walls[7].position.z = 400;
+   walls[8].position.x = -600;
+   walls[8].position.z = 600;
+   walls[9].position.x = -600;
+   walls[9].position.z = 400;
+   walls[10].position.x = -400;
+   walls[10].position.z = 600;
+   walls[11].position.x = -400;
+   walls[11].position.z = 400;
+   walls[12].position.x = 600;
+   walls[12].position.z = -600;
+   walls[13].position.x = 600;
+   walls[13].position.z = -400;
+   walls[14].position.x = 400;
+   walls[14].position.z = -600;
+   walls[15].position.x = 400;
+   walls[15].position.z = -400;
+
+
+   for (var i = 0; i < 16; i++) {
       walls[i].castShadow = true;
       walls[i].receiveShadow = true;
       walls[i].position.y = 125;
@@ -240,7 +496,7 @@ var renderer = new THREE.WebGLRenderer({
    canvas: canvas,
    antialias: true
 });
-renderer.setSize(canvas.width-100, canvas.height-100);
+renderer.setSize(canvas.width - 100, canvas.height - 100);
 renderer.shadowMapEnabled = true;
 renderer.shadowMapType = THREE.PCFShadowMap;
 var fov = 75,
@@ -314,8 +570,9 @@ setupCamera();
 addLights();
 addGround();
 addBoundries();
-addWalls();
 addFloor();
+//Menu();
+addWalls();
 
 document.body.appendChild(renderer.domElement);
 
@@ -487,7 +744,7 @@ var render = function() {
             //alert("Player 1 wins! Refresh to replay.");
             player1Dead = true;
             player2.Box3 = new THREE.Box3(new THREE.Vector3(-100, -100, -100), new THREE.Vector3(-100, -100, -100));
-         }else if (player1Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player1Shots[i].Box3.isIntersectionBox(boundries[1].Box3) ||
+         } else if (player1Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player1Shots[i].Box3.isIntersectionBox(boundries[1].Box3) ||
             player1Shots[i].Box3.isIntersectionBox(boundries[2].Box3) || player1Shots[i].Box3.isIntersectionBox(boundries[3].Box3) ||
             player1Shots[i].Box3.isIntersectionBox(ground.Box3)) {
             //check if out of bounds
@@ -521,15 +778,16 @@ var render = function() {
                   player1Shots[i].counter++;
                   scene.remove(walls[j]);
                   walls.splice(j, 1);
-                  //player1Shots.splice(i, 1);
+                  wall1 = true;
                   audioHitBox.play();
                   audioHitBox.currentTime = 0;
                   break;
                }
             }
-            if (player1Shots[i].counter > 2) {
+            if (player1Shots[i].counter > 1 || wall1) {
                scene.remove(player1Shots[i]);
                player1Shots.splice(i, 1);
+               wall1 = false;
             }
          }
 
@@ -565,13 +823,14 @@ var render = function() {
             player2Shots[i].Box3.isIntersectionBox(boundries[2].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[3].Box3) ||
             player2Shots[i].Box3.isIntersectionBox(ground.Box3)) {
             //check if out of bounds
-            if (player2Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[1].Box3))
+            if (player2Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[1].Box3)) {
                player2Shots[i].shotdX *= -1.0;
-            else {
+               player2Shots[i].counter++;
+            } else {
                player2Shots[i].shotdZ *= -1.0;
+               player2Shots[i].counter++;
             }
             player2Shots[i].shotdY *= -1.0;
-            player2Shots[i].counter++;
             audioHitTerrain.play();
             audioHitTerrain.currentTime = 0;
          } else if (player2Shots[i].position.y - 5 < 0) {
@@ -583,7 +842,6 @@ var render = function() {
             //check if hit wall
             for (j = 0; j < walls.length; j++) {
                if (player2Shots[i].Box3.isIntersectionBox(walls[j].Box3)) {
-                  //scene.remove(player1Shots[i]);
                   if (player2Shots[i].Box3.isIntersectionBox(walls[0].Box3) || player2Shots[i].Box3.isIntersectionBox(walls[1].Box3))
                      player2Shots[i].shotdX *= -1.0;
                   else {
@@ -593,16 +851,17 @@ var render = function() {
                   player2Shots[i].counter++;
                   scene.remove(walls[j]);
                   walls.splice(j, 1);
-                  //player1Shots.splice(i, 1);
+                  wall2 = true;
                   audioHitBox.play();
                   audioHitBox.currentTime = 0;
                   break;
                }
             }
          }
-         if (player2Shots[i].counter > 2) {
+         if (player2Shots[i].counter > 1 || wall2) {
             scene.remove(player2Shots[i]);
             player2Shots.splice(i, 1);
+            wall2 = false;
          }
       }
       //player 1 movement
@@ -679,89 +938,13 @@ var render = function() {
       }
       //player 2 movement
 
-      // if (counter == 90){
-      //    k = Math.floor(Math.random()*4);
-      //    counter = 0;
-      // }
+      if (counter == 90) {
+         k = Math.floor(Math.random() * 4);
+         counter = 0;
+      }
       counter++;
 
-      // if (k == 0){
-      //    player2.position.z -= 5 * Math.cos(player2.rotation.y);
-      //    player2.position.x -= 5 * Math.sin(player2.rotation.y);
-      //    player2.Box3.min.x = player2.position.x - 50;
-      //    player2.Box3.max.x = player2.position.x + 50;
-      //    player2.Box3.min.z = player2.position.z - 50;
-      //    player2.Box3.max.z = player2.position.z + 50;
-      //    for (i = 0; i < walls.length; i++) {
-      //       if (player2.Box3.isIntersectionBox(walls[i].Box3)) {
-      //          //check which way the collision came from
-      //          //left or right
-      //          if (oldplayer2Box.max.x < walls[i].Box3.min.x && player2.Box3.max.x > walls[i].Box3.min.x ||
-      //             oldplayer2Box.min.x > walls[i].Box3.max.x && player2.Box3.min.x < walls[i].Box3.max.x) {
-      //             player2.position.x += 5 * Math.sin(player2.rotation.y);
-      //             player2.Box3.min.x = player2.position.x - 50;
-      //             player2.Box3.max.x = player2.position.x + 50;
-      //          } else { // up or down
-      //             player2.position.z += 5 * Math.cos(player2.rotation.y);
-      //             player2.Box3.min.z = player2.position.z - 50;
-      //             player2.Box3.max.z = player2.position.z + 50;
-      //          }
-      //       }
-      //    }
-      //    if (player1.Box3.isIntersectionBox(player2.Box3)) {
-      //       player2.position.x += 5 * Math.sin(player2.rotation.y);
-      //       player2.Box3.min.x = player2.position.x - 50;
-      //       player2.Box3.max.x = player2.position.x + 50;
-      //       player2.position.z += 5 * Math.cos(player2.rotation.y);
-      //       player2.Box3.min.z = player2.position.z - 50;
-      //       player2.Box3.max.z = player2.position.z + 50;
-      //    }
-      // }
-      // //if (Key.isDown(Key.J)) {
-      // if (k == 1){
-      //    player2.rotation.y += 1 * Math.PI / 180;
-      // }
-      // //if (Key.isDown(Key.K)) {
-      // if (k == 2){
-      //    player2.position.z += 5 * Math.cos(player2.rotation.y);
-      //    player2.position.x += 5 * Math.sin(player2.rotation.y);
-      //    player2.Box3.min.x = player2.position.x - 50;
-      //    player2.Box3.max.x = player2.position.x + 50;
-      //    player2.Box3.min.z = player2.position.z - 50;
-      //    player2.Box3.max.z = player2.position.z + 50;
-      //    for (i = 0; i < walls.length; i++) {
-      //       if (player2.Box3.isIntersectionBox(walls[i].Box3)) {
-      //          //check which way the collision came from
-      //          //left or right
-      //          if (oldplayer2Box.max.x < walls[i].Box3.min.x && player2.Box3.max.x > walls[i].Box3.min.x ||
-      //             oldplayer2Box.min.x > walls[i].Box3.max.x && player2.Box3.min.x < walls[i].Box3.max.x) {
-      //             player2.position.x -= 5 * Math.sin(player2.rotation.y);
-      //             player2.Box3.min.x = player2.position.x - 50;
-      //             player2.Box3.max.x = player2.position.x + 50;
-      //          } else { // up or down
-      //             player2.position.z -= 5 * Math.cos(player2.rotation.y);
-      //             player2.Box3.min.z = player2.position.z - 50;
-      //             player2.Box3.max.z = player2.position.z + 50;
-      //          }
-      //       }
-      //    }
-      //    if (player1.Box3.isIntersectionBox(player2.Box3)) {
-      //       player2.position.x -= 5 * Math.sin(player2.rotation.y);
-      //       player2.Box3.min.x = player2.position.x - 50;
-      //       player2.Box3.max.x = player2.position.x + 50;
-      //       player2.position.z -= 5 * Math.cos(player2.rotation.y);
-      //       player2.Box3.min.z = player2.position.z - 50;
-      //       player2.Box3.max.z = player2.position.z + 50;
-      //    }
-      // }
-      // //if (Key.isDown(Key.L)) {
-      // if (k == 3){
-      //    player2.rotation.y -= 1 * Math.PI / 180;
-      // }
-
-      // SET movement
-
-      if (counter < 90 || (counter > 181 && counter < 270)){
+      if (k == 0) {
          player2.position.z -= 5 * Math.cos(player2.rotation.y);
          player2.position.x -= 5 * Math.sin(player2.rotation.y);
          player2.Box3.min.x = player2.position.x - 50;
@@ -794,20 +977,93 @@ var render = function() {
          }
       }
       //if (Key.isDown(Key.J)) {
-      if (counter > 271 && counter < 360){
+      if (k == 1) {
          player2.rotation.y += 1 * Math.PI / 180;
       }
+      //if (Key.isDown(Key.K)) {
+      if (k == 2) {
+         player2.position.z += 5 * Math.cos(player2.rotation.y);
+         player2.position.x += 5 * Math.sin(player2.rotation.y);
+         player2.Box3.min.x = player2.position.x - 50;
+         player2.Box3.max.x = player2.position.x + 50;
+         player2.Box3.min.z = player2.position.z - 50;
+         player2.Box3.max.z = player2.position.z + 50;
+         for (i = 0; i < walls.length; i++) {
+            if (player2.Box3.isIntersectionBox(walls[i].Box3)) {
+               //check which way the collision came from
+               //left or right
+               if (oldplayer2Box.max.x < walls[i].Box3.min.x && player2.Box3.max.x > walls[i].Box3.min.x ||
+                  oldplayer2Box.min.x > walls[i].Box3.max.x && player2.Box3.min.x < walls[i].Box3.max.x) {
+                  player2.position.x -= 5 * Math.sin(player2.rotation.y);
+                  player2.Box3.min.x = player2.position.x - 50;
+                  player2.Box3.max.x = player2.position.x + 50;
+               } else { // up or down
+                  player2.position.z -= 5 * Math.cos(player2.rotation.y);
+                  player2.Box3.min.z = player2.position.z - 50;
+                  player2.Box3.max.z = player2.position.z + 50;
+               }
+            }
+         }
+         if (player1.Box3.isIntersectionBox(player2.Box3)) {
+            player2.position.x -= 5 * Math.sin(player2.rotation.y);
+            player2.Box3.min.x = player2.position.x - 50;
+            player2.Box3.max.x = player2.position.x + 50;
+            player2.position.z -= 5 * Math.cos(player2.rotation.y);
+            player2.Box3.min.z = player2.position.z - 50;
+            player2.Box3.max.z = player2.position.z + 50;
+         }
+      }
       //if (Key.isDown(Key.L)) {
-      if (counter < 180 && counter > 91){
-         counter < 180 && counter > 91
+      if (k == 3) {
          player2.rotation.y -= 1 * Math.PI / 180;
       }
-      //
-      if (counter == 360)
-         counter = 0;
 
+      // SET movement
 
-
+      // if (counter < 90 || (counter > 181 && counter < 270)){
+      //    player2.position.z -= 5 * Math.cos(player2.rotation.y);
+      //    player2.position.x -= 5 * Math.sin(player2.rotation.y);
+      //    player2.Box3.min.x = player2.position.x - 50;
+      //    player2.Box3.max.x = player2.position.x + 50;
+      //    player2.Box3.min.z = player2.position.z - 50;
+      //    player2.Box3.max.z = player2.position.z + 50;
+      //    for (i = 0; i < walls.length; i++) {
+      //       if (player2.Box3.isIntersectionBox(walls[i].Box3)) {
+      //          //check which way the collision came from
+      //          //left or right
+      //          if (oldplayer2Box.max.x < walls[i].Box3.min.x && player2.Box3.max.x > walls[i].Box3.min.x ||
+      //             oldplayer2Box.min.x > walls[i].Box3.max.x && player2.Box3.min.x < walls[i].Box3.max.x) {
+      //             player2.position.x += 5 * Math.sin(player2.rotation.y);
+      //             player2.Box3.min.x = player2.position.x - 50;
+      //             player2.Box3.max.x = player2.position.x + 50;
+      //          } else { // up or down
+      //             player2.position.z += 5 * Math.cos(player2.rotation.y);
+      //             player2.Box3.min.z = player2.position.z - 50;
+      //             player2.Box3.max.z = player2.position.z + 50;
+      //          }
+      //       }
+      //    }
+      //    if (player1.Box3.isIntersectionBox(player2.Box3)) {
+      //       player2.position.x += 5 * Math.sin(player2.rotation.y);
+      //       player2.Box3.min.x = player2.position.x - 50;
+      //       player2.Box3.max.x = player2.position.x + 50;
+      //       player2.position.z += 5 * Math.cos(player2.rotation.y);
+      //       player2.Box3.min.z = player2.position.z - 50;
+      //       player2.Box3.max.z = player2.position.z + 50;
+      //    }
+      // }
+      // //if (Key.isDown(Key.J)) {
+      // if (counter > 271 && counter < 360){
+      //    player2.rotation.y += 1 * Math.PI / 180;
+      // }
+      // //if (Key.isDown(Key.L)) {
+      // if (counter < 180 && counter > 91){
+      //    counter < 180 && counter > 91
+      //    player2.rotation.y -= 1 * Math.PI / 180;
+      // }
+      // //
+      // if (counter == 360)
+      //    counter = 0;
 
 
 
@@ -937,7 +1193,7 @@ var render = function() {
       }
       //if (p2fireRate == 180) {
       // THIS IS FOR HARDER setting
-      if (p2fireRate == 61){
+      if (p2fireRate == 120) {
          //create bullet
          player2Shots.push(new THREE.Mesh(new THREE.SphereGeometry(10, 32, 16), new THREE.MeshLambertMaterial({
             color: 0xaa2222
@@ -955,7 +1211,11 @@ var render = function() {
          player2Shots[player2Shots.length - 1].particles = [];
          scene.add(player2Shots[player2Shots.length - 1]);
          audioShoot.play();
-         audioShoot.currentTime = 0;
+         //audioShoot.currentTime = 0;
+         // if (dummy < 2){
+         //    p2fireRate = 0;
+         //    dummy++;
+         // }
          p2fireRate = 0;
          for (i = 0; i < player2Shots.length; i++) {
             player2Shots[i].counter = 0;
@@ -976,7 +1236,7 @@ var render = function() {
             scene.remove(player1Shots[i]);
          }
          for (i = 0; i < player2Shots.length; i++) {
-            scene.remove(player1Shots[i]);
+            scene.remove(player2Shots[i]);
          }
          walls = [];
          player1Shots = [];
