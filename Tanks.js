@@ -1163,27 +1163,35 @@ var render = function() {
       // try to make turret face player1
       head2.rotation.y = -player2.rotation.y;
 
-      var xPos = player2.position.x - player1.position.z;
+      var xPos = player2.position.x - player1.position.x;
       var zPos = player2.position.z - player1.position.z;
       var angle = Math.tanh(zPos/xPos);
 
+
+
       // z is most negative at top, most positive at bottom
-      // if (player1.position.x > player2.position.x) {
-      //     // q1
-      //    if (player1.position.z < player2.position.z) {
-      //       head2.rotation.y = angle + (player2.rotation.y - Math.PI);
-      //    // q4
-      //    } else if (player1.position.z > player2.position.z) {
-
-      //    }
-      // // 
-      // } else if (player1.position.x < player2.position.x) {
-
-      // }
+       if (player1.position.x > player2.position.x) {
+           // q1
+          if (player1.position.z < player2.position.z) {
+             head2.rotation.y -= (Math.PI/2 - Math.abs(angle));
+          // q4
+          } else if (player1.position.z > player2.position.z) {
+              head2.rotation.y = head2.rotation.y + (- Math.abs(angle) - Math.PI/2);
+          }
+      //
+      } else if (player1.position.x < player2.position.x) {
+        // q2
+        if (player1.position.z < player2.position.z) {
+           head2.rotation.y += (Math.PI/2 - Math.abs(angle));
+        // q3
+        } else if (player1.position.z > player2.position.z) {
+            head2.rotation.y = head2.rotation.y + (Math.abs(angle) + Math.PI/2);
+        }
+      }
 
       // console.log(player1.position.z);
       // console.log(angle)
-      
+
       // if (Key.isDown(Key.U)) {
       //    head2.rotation.y += 1 * Math.PI / 180;
       // }
