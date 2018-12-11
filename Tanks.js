@@ -26,6 +26,8 @@ var random = false;
 var set = false;
 var wait = 0;
 
+var menuadded = 0;
+var textStart0, textStart1;
 
 var Key = {
    pressed: {},
@@ -194,7 +196,7 @@ function Menu() {
    }));
    textStart1.position.y = 900;
    textStart1.position.z = -200;
-   textStart1.rotation.x = -1.43;
+   textStart1.rotation.x  = -1.43;
    Start1.computeBoundingBox();
    var centerX1 = 0.5 * (Start1.boundingBox.max.x - Start1.boundingBox.min.x);
    textStart1.position.x = -centerX1;
@@ -214,6 +216,7 @@ function Menu() {
    var centerX2 = 0.5 * (Start2.boundingBox.max.x - Start2.boundingBox.min.x);
    textStart2.position.x = -centerX2;
 
+/*
    var Start3 = new THREE.TextGeometry("3) Easy - Level 2 - Random Movement", {
       size: 50,
       height: 30,
@@ -314,18 +317,36 @@ function Menu() {
    scene.add(textStart7)
    scene.add(textStart8)
 
-   while (wait < 1000000000) {
+*/
+    if (menuadded==0) {
+      scene.add(textStart0);
+      scene.add(textStart1);
+      menuadded=1;
+    }
+
+//   while (wait < 1000000000) {
       if (Key.isDown(Key.ONE)) {
          easy = true;
          l1 = true;
          random = true;
-         break;
+         gameStart=true;
+         scene.remove(textStart0);
+         scene.remove(textStart1);
+         console.log("just removed dat menu");
+         //break;
       } else if (Key.isDown(Key.TWO)) {
+         gameStart=true;
          hard = true;
          l1 = true;
          random = true;
-         break;
-      } else if (Key.isDown(Key.THREE)) {
+         scene.remove(textStart0);
+         scene.remove(textStart1);
+         //break;
+      }
+
+
+      /*
+      else if (Key.isDown(Key.THREE)) {
          easy = true;
          l2 = true;
          random = true;
@@ -356,8 +377,9 @@ function Menu() {
          set = true;
          break;
       }
-      wait++;
-   }
+      */
+//      wait++;
+//   }
 }
 
 
@@ -571,7 +593,7 @@ addLights();
 addGround();
 addBoundries();
 addFloor();
-//Menu();
+Menu();
 addWalls();
 
 document.body.appendChild(renderer.domElement);
@@ -696,8 +718,12 @@ player2.castShadow = true;
 scene.add(player2);
 var oldplayer2Box = new THREE.Box3(new THREE.Vector3(950, 0, -1050), new THREE.Vector3(1050, 66, -950));
 
+// variable set to true if game is running
+var gameStart = false;
+
 //game loop
 var render = function() {
+ if (gameStart) {
    if (!player1Dead && !player2Dead) {
       var i, j;
       if (p1fireRate < 60) {
@@ -1257,6 +1283,29 @@ var render = function() {
          scene.remove(text2);
       }
    }
+
+ }
+ else {
+   if (Key.isDown(Key.ONE)) {
+      easy = true;
+      l1 = true;
+      random = true;
+      gameStart=true;
+      scene.remove(textStart0);
+      scene.remove(textStart1);
+      console.log("just removed dat menu");
+      //break;
+   } else if (Key.isDown(Key.TWO)) {
+      gameStart=true;
+      hard = true;
+      l1 = true;
+      random = true;
+      scene.remove(textStart0);
+      scene.remove(textStart1);
+      //break;
+   }
+ }
+
    particleGroup1.tick(clock.getDelta());
    particleGroup2.tick(clock.getDelta());
    renderer.render(scene, camera); // render the scene
