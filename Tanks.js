@@ -25,7 +25,9 @@ var l2 = false;
 var random = false;
 var set = false;
 var wait = 0;
-
+var origin = new THREE.Vector3();
+var cameraTarget = new THREE.Vector3();
+var damping = 5.0;
 var menuadded = 0;
 var textStart0, textStart1;
 
@@ -110,6 +112,14 @@ function setupCamera() {
    camera.position.y = 2100;
    camera.position.x = 0;
    camera.lookAt(new THREE.Vector3(0, 0, 0));
+}
+
+function changeCamera(xD, yD, zD, place) {
+   camera.position.x = xD;
+   camera.position.y = yD;
+   camera.position.z = zD;
+   camera.lookAt(new THREE.Vector3(0, 0, 0));
+
 }
 
 function addGround() {
@@ -588,7 +598,7 @@ particleGroup2.addPool(150, emitterSettings2, true);
 scene.add(particleGroup2.mesh);
 
 //call some setup functions
-setupCamera();
+// setupCamera();
 addLights();
 addGround();
 addBoundries();
@@ -720,10 +730,21 @@ var oldplayer2Box = new THREE.Box3(new THREE.Vector3(950, 0, -1050), new THREE.V
 
 // variable set to true if game is running
 var gameStart = false;
+var distance = 5;
 
 //game loop
 var render = function() {
  if (gameStart) {
+   //  player1.position.copy(origin);
+   //  player1.getWorldPosition(cameraTarget)
+   //  cameraTarget.y = 2.5;
+   //  cameraTarget.z += distance;
+   //  camera.position.lerp(cameraTarget, clock.getDelta() * damping);
+   //  camera.lookAt(player1.position);
+   // changeCamera(player1.position.x - 1000, 200, player1.position.z, player1.position)
+   camera.position.z = 500;
+   camera.position.y = 250;
+   player1.add(camera)
    if (!player1Dead && !player2Dead) {
       var i, j;
       if (p1fireRate < 60) {
