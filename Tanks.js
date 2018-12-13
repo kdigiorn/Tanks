@@ -256,8 +256,8 @@ function Menu() {
    setupCamera();
    showGUI();
    var Start0 = new THREE.TextGeometry("Please pick one of the game play modes:", {
-      size: 50,
-      height: 30,
+      size: 100,
+      height: 60,
       font: "helvetiker"
    });
    textStart0 = new THREE.Mesh(Start0, new THREE.MeshLambertMaterial({
@@ -271,8 +271,8 @@ function Menu() {
    textStart0.position.x = -centerX0;
 
    var Start1 = new THREE.TextGeometry("1) Easy - Level 1 - Random Movement", {
-      size: 50,
-      height: 30,
+      size: 100,
+      height: 60,
       font: "helvetiker"
    });
    textStart1 = new THREE.Mesh(Start1, new THREE.MeshLambertMaterial({
@@ -286,8 +286,8 @@ function Menu() {
    textStart1.position.x = -centerX1;
 
    var Start2 = new THREE.TextGeometry("2) Hard - Level 1 - Random Movement", {
-      size: 50,
-      height: 30,
+      size: 100,
+      height: 60,
       font: "helvetiker"
    });
    textStart2 = new THREE.Mesh(Start2, new THREE.MeshLambertMaterial({
@@ -575,13 +575,17 @@ function addFloor() {
 
 function gameOver(player) {
    setupCamera();
-   // if (player === 1) {
-   //    level++;
-   // } else {
-   //    level = 1;
-   // }
    
-   var text1Geom = new THREE.TextGeometry("Player " + player + " wins!", {
+   var victory;
+   var string;
+   if (player == 1) {
+      victory = "You won!";
+      string = "Press b to move to next level";
+   } else {
+      victory = "You lost :(";
+      string = "Press b to restart level";
+   }
+   var text1Geom = new THREE.TextGeometry(victory, {
       size: 150,
       height: 30,
       font: "helvetiker"
@@ -596,7 +600,9 @@ function gameOver(player) {
    var centerX1 = 0.5 * (text1Geom.boundingBox.max.x - text1Geom.boundingBox.min.x);
    text1.position.x = -centerX1;
 
-   var text2Geom = new THREE.TextGeometry("Press b to restart game", {
+
+
+   var text2Geom = new THREE.TextGeometry(string, {
       size: 150,
       height: 30,
       font: "helvetiker"
@@ -1363,7 +1369,7 @@ var render = function() {
         // q3
         } else if (player1.position.z > player2.position.z) {
             head2.rotation.y = head2.rotation.y + (Math.abs(angle) + Math.PI/2);
-        }
+        } 
       }
 
       //Firing
