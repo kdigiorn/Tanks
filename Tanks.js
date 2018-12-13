@@ -902,7 +902,7 @@ var render = function() {
             level++;
             if (level > 3) {
                alert('you win');
-               window.location.href = "https://www.google.com"
+               location.reload();
             }
             gameOver(1);
             //alert("Player 1 wins! Refresh to replay.");
@@ -914,7 +914,7 @@ var render = function() {
             scene.remove(player1);
             audioHitPlayer.play();
             audioHitPlayer.currentTime = 0;
-            level = 1;
+            
             gameOver(2);
             //alert("Player 1 wins! Refresh to replay.");
             player1Dead = true;
@@ -990,7 +990,7 @@ var render = function() {
             scene.remove(player1);
             audioHitPlayer.play();
             audioHitPlayer.currentTime = 0;
-            level = 1;
+            // level = 1;
             gameOver(2);
             //alert("Player 1 wins! Refresh to replay.");
             player1Dead = true;
@@ -1432,7 +1432,7 @@ var render = function() {
    } else {
       if (Key.isDown(Key.B)) {
          if (player1Dead) {
-            level = 1;
+            // level = 1;
             scene.add(player1);
             // gameStart = false;
          } else {
