@@ -10,7 +10,7 @@ var camSet = false;
 var changeCam = false;
 var camSetting;
 var camChanged = false;
-// var 
+// var
 
 var p2fireLimit = 60;
 
@@ -42,7 +42,7 @@ var showGUI = function() {
 
 var arenaSize = 2500;
 var walls = [];
-var boundries = [];
+var boundaries = [];
 var ground;
 var text1;
 var text2;
@@ -63,6 +63,8 @@ var cameraTarget = new THREE.Vector3();
 var damping = 5.0;
 var menuadded = 0;
 var textStart0, textStart1, textSTart2;
+var p1StartingX = -1000;
+var p1StartingZ = 1000;
 
 var Key = {
    pressed: {},
@@ -181,7 +183,7 @@ function addGround() {
    scene.add(ground);
 }
 
-function addBoundries() {
+function addboundaries() {
    var woodTex = THREE.ImageUtils.loadTexture('textures/wood2.png');
    woodTex.wrapS = woodTex.wrapT = THREE.RepeatWrapping;
    woodTex.repeat.set(1, .1);
@@ -215,10 +217,10 @@ function addBoundries() {
    lWall.Box3 = new THREE.Box3(new THREE.Vector3(lWall.position.x - arenaSize / 2, 0, lWall.position.z - 12), new THREE.Vector3(lWall.position.x + arenaSize / 2, 100, lWall.position.z + 12));
    rWall.Box3 = new THREE.Box3(new THREE.Vector3(rWall.position.x - arenaSize / 2, 0, rWall.position.z - 12), new THREE.Vector3(rWall.position.x + arenaSize / 2, 100, rWall.position.z + 12));
 
-   boundries.push(uWall);
-   boundries.push(dWall);
-   boundries.push(lWall);
-   boundries.push(rWall);
+   boundaries.push(uWall);
+   boundaries.push(dWall);
+   boundaries.push(lWall);
+   boundaries.push(rWall);
    scene.add(uWall);
    scene.add(dWall);
    scene.add(lWall);
@@ -517,6 +519,27 @@ function addWalls() {
    walls[15].position.z = -400;
 
 
+// LEVEL 3
+
+    var woodTex = THREE.ImageUtils.loadTexture('textures/wood2.png');
+    woodTex.wrapS = woodTex.wrapT = THREE.RepeatWrapping;
+    woodTex.repeat.set(1, .1);
+
+    var dWall = new THREE.Mesh(new THREE.BoxGeometry(24, 100, arenaSize/2 + 48), new THREE.MeshLambertMaterial({
+       map: woodTex
+    }));
+    dWall.castShadow = true;
+    dWall.receiveShadow = true;
+
+    dWall.position.set( - 12, 50, -arenaSize/4);
+    dWall.Box3 = new THREE.Box3(new THREE.Vector3(dWall.position.x - 12, 0, dWall.position.z - (arenaSize/2 + 48) / 2), new THREE.Vector3(dWall.position.x + 12, 100, dWall.position.z + (arenaSize/2 + 48) / 2));
+
+    boundaries.push(dWall);
+    scene.add(dWall);
+
+    p1StartingX = -1000;
+    p1StartingZ = -1000;
+
    for (var i = 0; i < 16; i++) {
       walls[i].castShadow = true;
       walls[i].receiveShadow = true;
@@ -662,7 +685,7 @@ scene.add(particleGroup2.mesh);
 setupCamera();
 addLights();
 addGround();
-addBoundries();
+addboundaries();
 addFloor();
 Menu();
 addWalls();
@@ -740,7 +763,7 @@ var player1 = new THREE.Object3D();
 player1.add(block1);
 player1.add(head1);
 player1.Box3 = new THREE.Box3(new THREE.Vector3(-1050, 0, 950), new THREE.Vector3(-950, 66, 1050));
-player1.position.set(-1000, 26, 1000);
+player1.position.set(p1StartingX, 26, p1StartingZ);
 player1.receiveShadow = true;
 player1.castShadow = true;
 scene.add(player1);
@@ -862,13 +885,13 @@ var render = function() {
             //alert("Player 1 wins! Refresh to replay.");
             player1Dead = true;
             player2.Box3 = new THREE.Box3(new THREE.Vector3(-100, -100, -100), new THREE.Vector3(-100, -100, -100));
-         } else if (player1Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player1Shots[i].Box3.isIntersectionBox(boundries[1].Box3) ||
-            player1Shots[i].Box3.isIntersectionBox(boundries[2].Box3) || player1Shots[i].Box3.isIntersectionBox(boundries[3].Box3) ||
-            player1Shots[i].Box3.isIntersectionBox(ground.Box3)) {
+         } else if (player1Shots[i].Box3.isIntersectionBox(boundaries[0].Box3) || player1Shots[i].Box3.isIntersectionBox(boundaries[1].Box3) ||
+            player1Shots[i].Box3.isIntersectionBox(boundaries[2].Box3) || player1Shots[i].Box3.isIntersectionBox(boundaries[3].Box3) ||
+            player1Shots[i].Box3.isIntersectionBox(ground.Box3) || player1Shots[i].Box3.isIntersectionBox(boundaries[4].Box3)) {
             //check if out of bounds
             //scene.remove(player1Shots[i]);
             //player1Shots.splice(i, 1);
-            if (player1Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player1Shots[i].Box3.isIntersectionBox(boundries[1].Box3))
+            if (player1Shots[i].Box3.isIntersectionBox(boundaries[0].Box3) || player1Shots[i].Box3.isIntersectionBox(boundaries[1].Box3) || player1Shots[i].Box3.isIntersectionBox(boundaries[4].Box3))
                player1Shots[i].shotdX *= -1.0;
             else {
                player1Shots[i].shotdZ *= -1.0;
@@ -937,11 +960,11 @@ var render = function() {
             //alert("Player 1 wins! Refresh to replay.");
             player1Dead = true;
             player2.Box3 = new THREE.Box3(new THREE.Vector3(-100, -100, -100), new THREE.Vector3(-100, -100, -100));
-         } else if (player2Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[1].Box3) ||
-            player2Shots[i].Box3.isIntersectionBox(boundries[2].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[3].Box3) ||
-            player2Shots[i].Box3.isIntersectionBox(ground.Box3)) {
+         } else if (player2Shots[i].Box3.isIntersectionBox(boundaries[0].Box3) || player2Shots[i].Box3.isIntersectionBox(boundaries[1].Box3) ||
+            player2Shots[i].Box3.isIntersectionBox(boundaries[2].Box3) || player2Shots[i].Box3.isIntersectionBox(boundaries[3].Box3) ||
+            player2Shots[i].Box3.isIntersectionBox(ground.Box3) || player2Shots[i].Box3.isIntersectionBox(boundaries[4].Box3)) {
             //check if out of bounds
-            if (player2Shots[i].Box3.isIntersectionBox(boundries[0].Box3) || player2Shots[i].Box3.isIntersectionBox(boundries[1].Box3)) {
+            if (player2Shots[i].Box3.isIntersectionBox(boundaries[0].Box3) || player2Shots[i].Box3.isIntersectionBox(boundaries[1].Box3) || player2Shots[i].Box3.isIntersectionBox(boundaries[4].Box3)) {
                player2Shots[i].shotdX *= -1.0;
                player2Shots[i].counter++;
             } else {
@@ -1393,7 +1416,7 @@ var render = function() {
          player1Shots = [];
          player2Shots = [];
          addWalls();
-         player1.position.set(-1000, 26, 1000);
+         player1.position.set(p1StartingX, 26, p1StartingZ);
          player2.position.set(1000, 26, -1000);
          player1.rotation.set(0, 0, 0);
          player2.rotation.set(0, Math.PI, 0);
@@ -1442,6 +1465,3 @@ var render = function() {
 };
 
 render();
- 
-
- 
