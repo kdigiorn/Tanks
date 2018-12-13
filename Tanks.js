@@ -7,6 +7,25 @@ Player1: WASD to move, Q and E to rotate the turret, F and R to raise and lower 
 Player2: IJKL to move, U and O to rotate the turret, Y and H to raise and lower the turret, and / to shoot.
 */
 
+var changeCam = false;
+
+var FizzyText = function() {
+   this.message = 'dat.gui';
+   this.speed = 0.8;
+   this.cam = false;
+   // this.explode = function() { ... };
+   // Define render logic ...
+ };
+
+ var showGUI = function() {
+   var text = new FizzyText();
+   var gui = new dat.GUI();
+   gui.add(text, 'message');
+   gui.add(text, 'speed', -5, 5);
+   gui.add(text, 'cam');
+   // gui.add(text, 'explode');
+ };
+
 var arenaSize = 2500;
 var walls = [];
 var boundries = [];
@@ -107,15 +126,26 @@ function addLights() {
    scene.add(directionalLight);
 }
 
+// turn to true if player chooses first pov
+var camSet = false;
+
 function setupCamera() {
+   try {
+      player1.remove(camera);
+      // scene.add(camera);
+   } catch {
+      console.log('player1 doesn\'t exist yet');
+   }
    camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
    camera.position.z = 800;
    camera.position.y = 2100;
    camera.position.x = 0;
    camera.lookAt(new THREE.Vector3(0, 0, 0));
+   camSet = false;
 }
 
 function changeCamera(player1) {
+   console.log('changed');
    camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
    camera.position.z = 250;
    camera.position.y = 200;
@@ -183,6 +213,8 @@ function addBoundries() {
 }
 
 function Menu() {
+   setupCamera();
+   showGUI();
    var Start0 = new THREE.TextGeometry("Please pick one of the game play modes:", {
       size: 50,
       height: 30,
@@ -344,6 +376,12 @@ function Menu() {
          gameStart=true;
          scene.remove(textStart0);
          scene.remove(textStart1);
+         console.log(dat.GUI);
+         // try {
+         //    dat.GUI.toggleHide();
+         // } catch {
+         //    console.log('no gui to hide');
+         // }
          console.log("just removed dat menu");
          //break;
       } else if (Key.isDown(Key.TWO)) {
@@ -490,6 +528,7 @@ function addFloor() {
 
 function gameOver(player) {
    setupCamera();
+
    var text1Geom = new THREE.TextGeometry("Player " + player + " wins!", {
       size: 150,
       height: 30,
@@ -522,6 +561,8 @@ function gameOver(player) {
 
    scene.add(text1);
    scene.add(text2);
+
+   gamestart = false;
 }
 
 //setup the scene
@@ -688,7 +729,7 @@ player1.castShadow = true;
 scene.add(player1);
 var oldplayer1Box = new THREE.Box3(new THREE.Vector3(-1050, 0, 950), new THREE.Vector3(-950, 66, 1050));
 
-
+// to change color, do player1.children[i].material.color.setHex(0x...);
 
 //create player 2
 var head2 = new THREE.Object3D();
@@ -734,11 +775,15 @@ var oldplayer2Box = new THREE.Box3(new THREE.Vector3(950, 0, -1050), new THREE.V
 // variable set to true if game is running
 var gameStart = false;
 var distance = 5;
-var camSet = false;
+var hideGUI = false;
 
 //game loop
 var render = function() {
  if (gameStart) {
+   if (!hideGUI) {
+      hideGUI = true;
+      dat.GUI.toggleHide();
+   }
    //  player1.position.copy(origin);
    //  player1.getWorldPosition(cameraTarget)
    //  cameraTarget.y = 2.5;
@@ -746,12 +791,14 @@ var render = function() {
    //  camera.position.lerp(cameraTarget, clock.getDelta() * damping);
    //  camera.lookAt(player1.position);
    // changeCamera(player1.position.x - 1000, 200, player1.position.z, player1.position)
-   if (!camSet) {
-      camSet = true;
-      changeCamera(player1);
-   }
+
 
    if (!player1Dead && !player2Dead) {
+      if (!camSet) {
+         console.log('here')
+         camSet = true;
+         changeCamera(player1);
+      }
       var i, j;
       if (p1fireRate < 60) {
          p1fireRate++;
@@ -793,6 +840,7 @@ var render = function() {
             scene.remove(player1);
             audioHitPlayer.play();
             audioHitPlayer.currentTime = 0;
+
             gameOver(2);
             //alert("Player 1 wins! Refresh to replay.");
             player1Dead = true;
@@ -1310,6 +1358,7 @@ var render = function() {
       if (Key.isDown(Key.B)) {
          if (player1Dead) {
             scene.add(player1);
+            gameStart = false;
          } else {
             scene.add(player2);
          }
@@ -1372,3 +1421,6 @@ var render = function() {
 };
 
 render();
+ 
+
+ 
