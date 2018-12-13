@@ -12,7 +12,11 @@ var camSetting;
 var camChanged = false;
 // var
 
+var level = 1;
+
 var p2fireLimit = 60;
+
+var uWall;
 
 var FizzyText = function() {
    this.message = 'dat.gui';
@@ -187,7 +191,7 @@ function addboundaries() {
    var woodTex = THREE.ImageUtils.loadTexture('textures/wood2.png');
    woodTex.wrapS = woodTex.wrapT = THREE.RepeatWrapping;
    woodTex.repeat.set(1, .1);
-   var uWall = new THREE.Mesh(new THREE.BoxGeometry(24, 100, arenaSize + 48), new THREE.MeshLambertMaterial({
+   uWall = new THREE.Mesh(new THREE.BoxGeometry(24, 100, arenaSize + 48), new THREE.MeshLambertMaterial({
       map: woodTex
    }));
    uWall.castShadow = true;
@@ -469,14 +473,16 @@ function addWalls() {
       //    walls[i].position.z = -1 * (Math.floor(Math.random() * 1000) + 1);
       // }
 
-      // LEVEL 1
-      // if (i % 2 == 0) {
-      //    walls[i].position.x = i * 100;
-      //    walls[i].position.z = i * 100;
-      // } else {
-      //    walls[i].position.x = i * -100;
-      //    walls[i].position.z = i * -100;
-      // }
+      // LEVEL 2
+      if (level === 2) {
+         if (i % 2 == 0) {
+            walls[i].position.x = i * 100;
+            walls[i].position.z = i * 100;
+         } else {
+            walls[i].position.x = i * -100;
+            walls[i].position.z = i * -100;
+         }
+      }
 
       // walls[i].castShadow = true;
       // walls[i].receiveShadow = true;
@@ -484,62 +490,80 @@ function addWalls() {
       // walls[i].Box3 = new THREE.Box3(new THREE.Vector3(walls[i].position.x - 125, 0, walls[i].position.z - 125), new THREE.Vector3(walls[i].position.x + 125, 250, walls[i].position.z + 125));
       // scene.add(walls[i]);
    }
-   // LEVEL 2
-   walls[0].position.x = -600;
-   walls[0].position.z = -600;
-   walls[1].position.x = -600;
-   walls[1].position.z = -400;
-   walls[2].position.x = -400;
-   walls[2].position.z = -600;
-   walls[3].position.x = -400;
-   walls[3].position.z = -400;
-   walls[4].position.x = 600;
-   walls[4].position.z = 600;
-   walls[5].position.x = 600;
-   walls[5].position.z = 400;
-   walls[6].position.x = 400;
-   walls[6].position.z = 600;
-   walls[7].position.x = 400;
-   walls[7].position.z = 400;
-   walls[8].position.x = -600;
-   walls[8].position.z = 600;
-   walls[9].position.x = -600;
-   walls[9].position.z = 400;
-   walls[10].position.x = -400;
-   walls[10].position.z = 600;
-   walls[11].position.x = -400;
-   walls[11].position.z = 400;
-   walls[12].position.x = 600;
-   walls[12].position.z = -600;
-   walls[13].position.x = 600;
-   walls[13].position.z = -400;
-   walls[14].position.x = 400;
-   walls[14].position.z = -600;
-   walls[15].position.x = 400;
-   walls[15].position.z = -400;
+
+   if (level === 1 || level === 3) {
+   // LEVEL 1
+      walls[0].position.x = -600;
+      walls[0].position.z = -600;
+      walls[1].position.x = -600;
+      walls[1].position.z = -400;
+      walls[2].position.x = -400;
+      walls[2].position.z = -600;
+      walls[3].position.x = -400;
+      walls[3].position.z = -400;
+      walls[4].position.x = 600;
+      walls[4].position.z = 600;
+      walls[5].position.x = 600;
+      walls[5].position.z = 400;
+      walls[6].position.x = 400;
+      walls[6].position.z = 600;
+      walls[7].position.x = 400;
+      walls[7].position.z = 400;
+      walls[8].position.x = -600;
+      walls[8].position.z = 600;
+      walls[9].position.x = -600;
+      walls[9].position.z = 400;
+      walls[10].position.x = -400;
+      walls[10].position.z = 600;
+      walls[11].position.x = -400;
+      walls[11].position.z = 400;
+      walls[12].position.x = 600;
+      walls[12].position.z = -600;
+      walls[13].position.x = 600;
+      walls[13].position.z = -400;
+      walls[14].position.x = 400;
+      walls[14].position.z = -600;
+      walls[15].position.x = 400;
+      walls[15].position.z = -400;
+   }
 
 
 // LEVEL 3
+   var woodTex = THREE.ImageUtils.loadTexture('textures/wood2.png');
 
-    var woodTex = THREE.ImageUtils.loadTexture('textures/wood2.png');
-    woodTex.wrapS = woodTex.wrapT = THREE.RepeatWrapping;
-    woodTex.repeat.set(1, .1);
+   woodTex.wrapS = woodTex.wrapT = THREE.RepeatWrapping;
+   woodTex.repeat.set(1, .1);
+   
+   var nWall = new THREE.Mesh(new THREE.BoxGeometry(24, 100, arenaSize/2 + 48), new THREE.MeshLambertMaterial({
+      map: woodTex
+   }));
+   nWall.castShadow = true;
+   nWall.receiveShadow = true;
 
-    var dWall = new THREE.Mesh(new THREE.BoxGeometry(24, 100, arenaSize/2 + 48), new THREE.MeshLambertMaterial({
-       map: woodTex
-    }));
-    dWall.castShadow = true;
-    dWall.receiveShadow = true;
+   nWall.position.set( - 12, 50, -arenaSize/4);
+   nWall.Box3 = new THREE.Box3(new THREE.Vector3(nWall.position.x - 12, 0, nWall.position.z - (arenaSize/2 + 48) / 2), new THREE.Vector3(nWall.position.x + 12, 100, nWall.position.z + (arenaSize/2 + 48) / 2));
 
-    dWall.position.set( - 12, 50, -arenaSize/4);
-    dWall.Box3 = new THREE.Box3(new THREE.Vector3(dWall.position.x - 12, 0, dWall.position.z - (arenaSize/2 + 48) / 2), new THREE.Vector3(dWall.position.x + 12, 100, dWall.position.z + (arenaSize/2 + 48) / 2));
 
-    boundaries.push(dWall);
-    scene.add(dWall);
+   if (level === 3) {
+      console.log('its level ' + level)
 
-    p1StartingX = -1000;
-    p1StartingZ = -1000;
-
+      p1StartingX = -1000;
+      p1StartingZ = -1000;
+   } else {
+      console.log(boundaries);
+      try {
+         scene.remove(boundaries[4]);
+         boundaries.splice(4, 1);
+      } catch {
+         console.log('boundaries[4] already removed from scene');
+      }
+      // uWall.position.set(-50, 50, -arenaSize/2);
+      nWall = uWall;
+      // boundaries.push(nWall);
+      // scene.add(nWall);
+   }
+   boundaries.push(nWall);   
+   scene.add(nWall);
    for (var i = 0; i < 16; i++) {
       walls[i].castShadow = true;
       walls[i].receiveShadow = true;
@@ -567,7 +591,12 @@ function addFloor() {
 
 function gameOver(player) {
    setupCamera();
-
+   // if (player === 1) {
+   //    level++;
+   // } else {
+   //    level = 1;
+   // }
+   
    var text1Geom = new THREE.TextGeometry("Player " + player + " wins!", {
       size: 150,
       height: 30,
@@ -870,6 +899,11 @@ var render = function() {
             scene.remove(player2);
             audioHitPlayer.play();
             audioHitPlayer.currentTime = 0;
+            level++;
+            if (level > 3) {
+               alert('you win');
+               window.location.href = "https://www.google.com"
+            }
             gameOver(1);
             //alert("Player 1 wins! Refresh to replay.");
             player2Dead = true;
@@ -880,7 +914,7 @@ var render = function() {
             scene.remove(player1);
             audioHitPlayer.play();
             audioHitPlayer.currentTime = 0;
-
+            level = 1;
             gameOver(2);
             //alert("Player 1 wins! Refresh to replay.");
             player1Dead = true;
@@ -956,6 +990,7 @@ var render = function() {
             scene.remove(player1);
             audioHitPlayer.play();
             audioHitPlayer.currentTime = 0;
+            level = 1;
             gameOver(2);
             //alert("Player 1 wins! Refresh to replay.");
             player1Dead = true;
@@ -1397,8 +1432,9 @@ var render = function() {
    } else {
       if (Key.isDown(Key.B)) {
          if (player1Dead) {
+            level = 1;
             scene.add(player1);
-            gameStart = false;
+            // gameStart = false;
          } else {
             scene.add(player2);
          }
@@ -1406,6 +1442,8 @@ var render = function() {
          for (i = 0; i < walls.length; i++) {
             scene.remove(walls[i]);
          }
+         boundaries.splice(4, 1);
+         scene.remove(boundaries[4]);
          for (i = 0; i < player1Shots.length; i++) {
             scene.remove(player1Shots[i]);
          }
@@ -1415,6 +1453,9 @@ var render = function() {
          walls = [];
          player1Shots = [];
          player2Shots = [];
+         levels = 1;
+         scene.remove(boundaries[4]);
+         boundaries.splice(4, 1);
          addWalls();
          player1.position.set(p1StartingX, 26, p1StartingZ);
          player2.position.set(1000, 26, -1000);
