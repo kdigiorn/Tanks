@@ -10,6 +10,9 @@ var camSet = false;
 var changeCam = false;
 var camSetting;
 var camChanged = false;
+// var 
+
+var p2fireLimit = 60;
 
 var FizzyText = function() {
    this.message = 'dat.gui';
@@ -59,7 +62,7 @@ var origin = new THREE.Vector3();
 var cameraTarget = new THREE.Vector3();
 var damping = 5.0;
 var menuadded = 0;
-var textStart0, textStart1;
+var textStart0, textStart1, textSTart2;
 
 var Key = {
    pressed: {},
@@ -375,6 +378,7 @@ function Menu() {
     if (menuadded==0) {
       scene.add(textStart0);
       scene.add(textStart1);
+      scene.add(textSTart2);
       menuadded=1;
     }
 
@@ -386,6 +390,7 @@ function Menu() {
          gameStart=true;
          scene.remove(textStart0);
          scene.remove(textStart1);
+         scene.remove(textStart2);
          console.log(dat.GUI);
          // try {
          //    dat.GUI.toggleHide();
@@ -401,6 +406,7 @@ function Menu() {
          random = true;
          scene.remove(textStart0);
          scene.remove(textStart1);
+         scene.remove(textStart2);
          //break;
       }
 
@@ -1337,7 +1343,7 @@ var render = function() {
       }
       //if (p2fireRate == 180) {
       // THIS IS FOR HARDER setting
-      if (p2fireRate == 120) {
+      if (p2fireRate >= p2fireLimit) {
          //create bullet
          player2Shots.push(new THREE.Mesh(new THREE.SphereGeometry(10, 32, 16), new THREE.MeshLambertMaterial({
             color: 0xaa2222
@@ -1415,12 +1421,14 @@ var render = function() {
       console.log("just removed dat menu");
       //break;
    } else if (Key.isDown(Key.TWO)) {
+      p2fireLimit = 30;
       gameStart=true;
       hard = true;
       l1 = true;
       random = true;
       scene.remove(textStart0);
       scene.remove(textStart1);
+      // console.log(p2fireLimit)
       //break;
    }
  }
