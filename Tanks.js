@@ -108,17 +108,19 @@ function addLights() {
 }
 
 function setupCamera() {
+   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
    camera.position.z = 800;
    camera.position.y = 2100;
    camera.position.x = 0;
    camera.lookAt(new THREE.Vector3(0, 0, 0));
 }
 
-function changeCamera(xD, yD, zD, place) {
-   camera.position.x = xD;
-   camera.position.y = yD;
-   camera.position.z = zD;
-   camera.lookAt(new THREE.Vector3(0, 0, 0));
+function changeCamera(player1) {
+   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+   camera.position.z = 250;
+   camera.position.y = 200;
+   camera.position.x = 0;
+   player1.add(camera);
 
 }
 
@@ -487,6 +489,7 @@ function addFloor() {
 }
 
 function gameOver(player) {
+   setupCamera();
    var text1Geom = new THREE.TextGeometry("Player " + player + " wins!", {
       size: 150,
       height: 30,
@@ -598,7 +601,7 @@ particleGroup2.addPool(150, emitterSettings2, true);
 scene.add(particleGroup2.mesh);
 
 //call some setup functions
-// setupCamera();
+setupCamera();
 addLights();
 addGround();
 addBoundries();
@@ -731,6 +734,7 @@ var oldplayer2Box = new THREE.Box3(new THREE.Vector3(950, 0, -1050), new THREE.V
 // variable set to true if game is running
 var gameStart = false;
 var distance = 5;
+var camSet = false;
 
 //game loop
 var render = function() {
@@ -742,9 +746,11 @@ var render = function() {
    //  camera.position.lerp(cameraTarget, clock.getDelta() * damping);
    //  camera.lookAt(player1.position);
    // changeCamera(player1.position.x - 1000, 200, player1.position.z, player1.position)
-   camera.position.z = 500;
-   camera.position.y = 250;
-   player1.add(camera)
+   if (!camSet) {
+      camSet = true;
+      changeCamera(player1);
+   }
+
    if (!player1Dead && !player2Dead) {
       var i, j;
       if (p1fireRate < 60) {
