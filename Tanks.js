@@ -6,8 +6,10 @@ CONTROLS:
 Player1: WASD to move, Q and E to rotate the turret, F and R to raise and lower the turret, and shift to shoot.
 Player2: IJKL to move, U and O to rotate the turret, Y and H to raise and lower the turret, and / to shoot.
 */
-
+var camSet = false;
 var changeCam = false;
+var camSetting;
+var camChanged = false;
 
 var FizzyText = function() {
    this.message = 'dat.gui';
@@ -15,16 +17,25 @@ var FizzyText = function() {
    this.cam = false;
    // this.explode = function() { ... };
    // Define render logic ...
- };
+};
 
- var showGUI = function() {
+var showGUI = function() {
    var text = new FizzyText();
    var gui = new dat.GUI();
    gui.add(text, 'message');
    gui.add(text, 'speed', -5, 5);
-   gui.add(text, 'cam');
+   camSetting = gui.add(text, 'cam');
+   camSetting.onChange((value) => {
+      if (value == true) {
+         camSet = true;
+      } else {
+         camSet = false;
+      }
+   })
    // gui.add(text, 'explode');
- };
+};
+
+
 
 var arenaSize = 2500;
 var walls = [];
@@ -127,7 +138,6 @@ function addLights() {
 }
 
 // turn to true if player chooses first pov
-var camSet = false;
 
 function setupCamera() {
    try {
@@ -141,7 +151,7 @@ function setupCamera() {
    camera.position.y = 2100;
    camera.position.x = 0;
    camera.lookAt(new THREE.Vector3(0, 0, 0));
-   camSet = false;
+   // camSet = false;
 }
 
 function changeCamera(player1) {
@@ -563,6 +573,7 @@ function gameOver(player) {
    scene.add(text2);
 
    gamestart = false;
+   camChanged = false;
 }
 
 //setup the scene
@@ -794,9 +805,9 @@ var render = function() {
 
 
    if (!player1Dead && !player2Dead) {
-      if (!camSet) {
+      if (camSet && camChanged == false) {
          console.log('here')
-         camSet = true;
+         camChanged = true;
          changeCamera(player1);
       }
       var i, j;
