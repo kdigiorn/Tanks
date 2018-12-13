@@ -6,10 +6,16 @@ CONTROLS:
 Player1: WASD to move, Q and E to rotate the turret, F and R to raise and lower the turret, and shift to shoot.
 Player2: IJKL to move, U and O to rotate the turret, Y and H to raise and lower the turret, and / to shoot.
 */
+
+
 var camSet = false;
 var changeCam = false;
 var camSetting;
 var camChanged = false;
+var bodyC;
+var headC;
+var turretC;
+
 // var
 
 var level = 1;
@@ -19,19 +25,23 @@ var p2fireLimit = 60;
 var uWall;
 
 var FizzyText = function() {
-   this.message = 'dat.gui';
-   this.speed = 0.8;
    this.cam = false;
-   // this.explode = function() { ... };
-   // Define render logic ...
+   this.bodyColor = [ 0, 128, 255 ];
+   this.headColor = [ 0, 128, 255 ];
+   this.turretColor = [0, 128, 255 ];
 };
 
 var showGUI = function() {
    var text = new FizzyText();
    var gui = new dat.GUI();
-   gui.add(text, 'message');
-   gui.add(text, 'speed', -5, 5);
+   // gui.add(text, 'message');
+   // gui.add(text, 'speed', -5, 5);
+
    camSetting = gui.add(text, 'cam');
+   bodySetting = gui.addColor(text, 'bodyColor');
+   headSetting = gui.addColor(text, 'headColor');
+   turretSetting = gui.addColor(text, 'turretColor');
+
    camSetting.onChange((value) => {
       if (value == true) {
          camSet = true;
@@ -39,6 +49,17 @@ var showGUI = function() {
          camSet = false;
       }
    })
+   bodySetting.onChange((value) => {
+      console.log(value)
+      player1.children[0].material.color.setRGB(value[0], value[1], value[2]);
+   })
+   headSetting.onChange((value) => {
+      player1.children[1].children[0].material.color.setRGB(value[0], value[1], value[2]);
+   })
+   turretSetting.onChange((value) => {
+      player1.children[1].children[1].children[0].material.color.setRGB(value[0], value[1], value[2]);
+   })
+
    // gui.add(text, 'explode');
 };
 
@@ -415,43 +436,6 @@ function Menu() {
          scene.remove(textStart2);
          //break;
       }
-
-
-      /*
-      else if (Key.isDown(Key.THREE)) {
-         easy = true;
-         l2 = true;
-         random = true;
-         break;
-      } else if (Key.isDown(Key.FOUR)) {
-         hard = true;
-         l2 = true;
-         random = true
-         break;
-      } else if (Key.isDown(Key.FIVE)) {
-         easy = true;
-         l1 = true;
-         set = true;
-         break;
-      } else if (Key.isDown(Key.SIX)) {
-         hard = true;
-         l1 = true;
-         set = true;
-         break;
-      } else if (Key.isDown(Key.SEVEN)) {
-         easy = true;
-         l2 = true;
-         set = true;
-         break;
-      } else if (Key.isDown(Key.EIGHT)) {
-         hard = true;
-         l2 = true;
-         set = true;
-         break;
-      }
-      */
-//      wait++;
-//   }
 }
 
 
@@ -1073,6 +1057,18 @@ var render = function() {
             player1.Box3.min.z = player1.position.z - 50;
             player1.Box3.max.z = player1.position.z + 50;
          }
+         if (player1.Box3.isIntersectionBox(boundaries[4].Box3)) {
+            if (oldplayer1Box.max.x < boundaries[4].Box3.min.x && player1.Box3.max.x > boundaries[4].Box3.min.x ||
+               oldplayer1Box.min.x > boundaries[4].Box3.max.x && player1.Box3.min.x < boundaries[4].Box3.max.x) {
+               player1.position.x += 5 * Math.sin(player1.rotation.y);
+               player1.Box3.min.x = player1.position.x - 50;
+               player1.Box3.max.x = player1.position.x + 50;
+            } else { // up or down
+               player1.position.z += 5 * Math.cos(player1.rotation.y);
+               player1.Box3.min.z = player1.position.z - 50;
+               player1.Box3.max.z = player1.position.z + 50;
+            }
+         }
       }
       if (Key.isDown(Key.LEFT)) {
          player1.rotation.y += 1 * Math.PI / 180;
@@ -1101,6 +1097,14 @@ var render = function() {
             }
          }
          if (player1.Box3.isIntersectionBox(player2.Box3)) {
+            player1.position.x -= 5 * Math.sin(player1.rotation.y);
+            player1.Box3.min.x = player1.position.x - 50;
+            player1.Box3.max.x = player1.position.x + 50;
+            player1.position.z -= 5 * Math.cos(player1.rotation.y);
+            player1.Box3.min.z = player1.position.z - 50;
+            player1.Box3.max.z = player1.position.z + 50;
+         }
+         if (player1.Box3.isIntersectionBox(boundaries[4].Box3)) {
             player1.position.x -= 5 * Math.sin(player1.rotation.y);
             player1.Box3.min.x = player1.position.x - 50;
             player1.Box3.max.x = player1.position.x + 50;
@@ -1151,6 +1155,18 @@ var render = function() {
             player2.Box3.min.z = player2.position.z - 50;
             player2.Box3.max.z = player2.position.z + 50;
          }
+         if (player2.Box3.isIntersectionBox(boundaries[4].Box3)) {
+            if (oldplayer2Box.max.x < boundaries[4].Box3.min.x && player2.Box3.max.x > boundaries[4].Box3.min.x ||
+               oldplayer2Box.min.x > boundaries[4].Box3.max.x && player2.Box3.min.x < boundaries[4].Box3.max.x) {
+               player2.position.x += 5 * Math.sin(player2.rotation.y);
+               player2.Box3.min.x = player2.position.x - 50;
+               player2.Box3.max.x = player2.position.x + 50;
+            } else { // up or down
+               player2.position.z += 5 * Math.cos(player2.rotation.y);
+               player2.Box3.min.z = player2.position.z - 50;
+               player2.Box3.max.z = player2.position.z + 50;
+            }
+         }
       }
       //if (Key.isDown(Key.J)) {
       if (k == 1) {
@@ -1187,6 +1203,18 @@ var render = function() {
             player2.position.z -= 5 * Math.cos(player2.rotation.y);
             player2.Box3.min.z = player2.position.z - 50;
             player2.Box3.max.z = player2.position.z + 50;
+         }
+         if (player2.Box3.isIntersectionBox(boundaries[4].Box3)) {
+            if (oldplayer2Box.max.x < boundaries[4].Box3.min.x && player2.Box3.max.x > boundaries[4].Box3.min.x ||
+               oldplayer2Box.min.x > boundaries[4].Box3.max.x && player2.Box3.min.x < boundaries[4].Box3.max.x) {
+               player2.position.x += 5 * Math.sin(player2.rotation.y);
+               player2.Box3.min.x = player2.position.x - 50;
+               player2.Box3.max.x = player2.position.x + 50;
+            } else { // up or down
+               player2.position.z += 5 * Math.cos(player2.rotation.y);
+               player2.Box3.min.z = player2.position.z - 50;
+               player2.Box3.max.z = player2.position.z + 50;
+            }
          }
       }
       //if (Key.isDown(Key.L)) {
@@ -1320,15 +1348,14 @@ var render = function() {
 
 
       // z is most negative at top, most positive at bottom
-       if (player1.position.x > player2.position.x) {
-           // q1
-          if (player1.position.z < player2.position.z) {
-             head2.rotation.y -= (Math.PI/2 - Math.abs(angle));
-          // q4
-          } else if (player1.position.z > player2.position.z) {
-              head2.rotation.y = head2.rotation.y + (- Math.abs(angle) - Math.PI/2);
-          }
-      //
+      if (player1.position.x > player2.position.x) {
+         // q1
+         if (player1.position.z < player2.position.z) {
+            head2.rotation.y -= (Math.PI/2 - Math.abs(angle));
+         // q4
+         } else if (player1.position.z > player2.position.z) {
+            head2.rotation.y = head2.rotation.y + (- Math.abs(angle) - Math.PI/2);
+         }
       } else if (player1.position.x < player2.position.x) {
         // q2
         if (player1.position.z < player2.position.z) {
@@ -1338,42 +1365,6 @@ var render = function() {
             head2.rotation.y = head2.rotation.y + (Math.abs(angle) + Math.PI/2);
         }
       }
-
-      // console.log(player1.position.z);
-      // console.log(angle)
-
-      // if (Key.isDown(Key.U)) {
-      //    head2.rotation.y += 1 * Math.PI / 180;
-      // }
-
-      // if (Key.isDown(Key.O)) {
-      //    head2.rotation.y -= 1 * Math.PI / 180;
-      // }
-      //up the down
-      // if (Key.isDown(Key.R)) {
-      // 	cannon1.rotation.x += 0.5 * Math.PI / 180;
-      // 	if (cannon1.rotation.x > 0) {
-      // 		cannon1.rotation.x = 0;
-      // 	}
-      // }
-      // if (Key.isDown(Key.F)) {
-      // 	cannon1.rotation.x -= 0.5 * Math.PI / 180;
-      // 	if (cannon1.rotation.x < -90 * Math.PI / 180) {
-      // 		cannon1.rotation.x = -90 * Math.PI / 180;
-      // 	}
-      // }
-      // if (Key.isDown(Key.Y)) {
-      // 	cannon2.rotation.x += 0.5 * Math.PI / 180;
-      // 	if (cannon2.rotation.x > 0) {
-      // 		cannon2.rotation.x = 0;
-      // 	}
-      // }
-      // if (Key.isDown(Key.H)) {
-      // 	cannon2.rotation.x -= 0.5 * Math.PI / 180;
-      // 	if (cannon2.rotation.x < -90 * Math.PI / 180) {
-      // 		cannon2.rotation.x = -90 * Math.PI / 180;
-      // 	}
-      // }
 
       //Firing
       if (p1fireRate == 60 && Key.isDown(Key.SPACEBAR)) {
@@ -1428,7 +1419,7 @@ var render = function() {
          for (i = 0; i < player2Shots.length; i++) {
             player2Shots[i].counter = 0;
          }
-      }
+      } 
    } else {
       if (Key.isDown(Key.B)) {
          if (player1Dead) {
@@ -1472,7 +1463,6 @@ var render = function() {
          scene.remove(text2);
       }
    }
-
  }
  else {
    if (Key.isDown(Key.ONE)) {
