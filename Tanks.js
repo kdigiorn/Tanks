@@ -378,7 +378,7 @@ function Menu() {
     if (menuadded==0) {
       scene.add(textStart0);
       scene.add(textStart1);
-      scene.add(textSTart2);
+      scene.add(textStart2);
       menuadded=1;
     }
 
@@ -1418,6 +1418,7 @@ var render = function() {
       gameStart=true;
       scene.remove(textStart0);
       scene.remove(textStart1);
+      scene.remove(textStart2);
       console.log("just removed dat menu");
       //break;
    } else if (Key.isDown(Key.TWO)) {
@@ -1428,6 +1429,7 @@ var render = function() {
       random = true;
       scene.remove(textStart0);
       scene.remove(textStart1);
+      scene.remove(textStart2);
       // console.log(p2fireLimit)
       //break;
    }
